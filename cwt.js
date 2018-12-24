@@ -7,14 +7,6 @@ const runAsync = (codeblock) => {
   setTimeout(codeblock, 0);
 }
 
-const wait = () => {
-  let y = 0;
-  for (let i = 0; i < 10000000000; i++) {
-    y = i;
-  }
-}
-
-
 const generateToken = (data) => {
   if (data === null || data === undefined) {
     throw Error('Invalid data');
