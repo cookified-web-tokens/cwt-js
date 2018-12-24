@@ -4,7 +4,7 @@
   "description": "A sweet mix of Web Tokens with Cookies!",
   "main": "cwt.js",
   "scripts": {
-    "start": "nodemon cwt.js"
+    "start": "clear && nodemon cwt.js"
   },
   "repository": {
     "type": "git",
