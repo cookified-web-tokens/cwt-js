@@ -4,7 +4,7 @@
   "description": "A sweet mix of Web Tokens with Cookies!",
   "main": "cwt.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon cwt.js"
   },
   "repository": {
     "type": "git",
