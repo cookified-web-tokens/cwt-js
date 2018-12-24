@@ -1,10 +1,14 @@
+const redisClient = require("redis").createClient();
+// redisClient.on("error", (err) => console.log("Dang it" + err));
+
 const jwt = require('jsonwebtoken');
 const JWT_SECRET_KEY = 'shhhh...';
 const {
   generateToken,
   onGeneratedToken,
   promiseToken
-} = require('./token-generation').using(jwt, JWT_SECRET_KEY);
+} = require('./token-generation')
+    .using(redisClient, jwt, JWT_SECRET_KEY);
 const {
   retrieveData,
   onRetrievedData,
@@ -22,8 +26,8 @@ onGeneratedToken(id).subscribe(
   result => {
     onRetrievedData(result).subscribe(
       result => console.log('ID:', result),
-      (msg, error) => console.log(msg)
+      (msg, error) => console.log(msg, error)
     );
   },
-  error => console.log(error)
+  (msg, error) => console.log(msg, error)
 );

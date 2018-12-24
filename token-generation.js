@@ -1,6 +1,7 @@
 const { runAsync } = require('./async-util');
 
-const using = (webTokenProvider, key) => {
+const using = (storage, webTokenProvider, key) => {
+  let tokenStore = storage;
   let jwt = webTokenProvider;
   let JWT_SECRET_KEY = key;
 
@@ -8,7 +9,9 @@ const using = (webTokenProvider, key) => {
     if (data === null || data === undefined) {
       throw Error('Invalid data');
     }
-    return jwt.sign({data}, JWT_SECRET_KEY);
+    const token = jwt.sign({data}, JWT_SECRET_KEY);
+    tokenStore.set(token, data);
+    return token;
   };
 
   const onGeneratedToken = (data) => {
@@ -19,6 +22,8 @@ const using = (webTokenProvider, key) => {
         }
         try {
           const token = jwt.sign({data}, JWT_SECRET_KEY);
+          tokenStore.set(token, data);
+
           return onSuccess(token);
         } catch(e) {
           return onError('Invalid data or secret key', e);
@@ -36,6 +41,7 @@ const using = (webTokenProvider, key) => {
         }
         try {
           const token = jwt.sign({data}, JWT_SECRET_KEY);
+          tokenStore.set(token, data);
           return resolve(token);
         } catch(e) {
           return reject('Invalid data or secret key');
