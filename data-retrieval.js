@@ -1,6 +1,7 @@
 const { runAsync } = require('./async-util');
 
-const using = (webTokenProvider, key) => {
+const using = (storage, webTokenProvider, key) => {
+  let tokenStore = storage;
   let jwt = webTokenProvider;
   let JWT_SECRET_KEY = key;
 
@@ -12,8 +13,14 @@ const using = (webTokenProvider, key) => {
     const subscribe = (onSuccess, onError) => {
       runAsync(() => {
         try {
-          const data = jwt.verify(token, JWT_SECRET_KEY);
-          return onSuccess(data['data']);
+          const data = jwt.verify(token, JWT_SECRET_KEY)['data'];
+          tokenStore.get(token, (err, res) => {
+            if (''+data === ''+res) {
+              onSuccess(data);
+            } else {
+              onError('Token not in store', err);
+            }
+          });
         } catch (e) {
           return onError('Invalid token', e);
         }
@@ -26,8 +33,14 @@ const using = (webTokenProvider, key) => {
     return new Promise((resolve, reject) => {
       runAsync(() => {
         try {
-          const data = jwt.verify(token, JWT_SECRET_KEY);
-          return resolve(data['data']);
+          const data = jwt.verify(token, JWT_SECRET_KEY)['data'];
+          tokenStore.get(token, (err, res) => {
+            if (''+data === ''+res) {
+              resolve(data)
+            } else {
+              reject('Invalid token');
+            }
+          });
         } catch (e) {
           return reject('Invalid token', e);
         }

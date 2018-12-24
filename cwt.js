@@ -13,7 +13,9 @@ const {
   retrieveData,
   onRetrievedData,
   promiseData
-} = require('./data-retrieval').using(jwt, JWT_SECRET_KEY);
+} = require('./data-retrieval')
+    .using(redisClient, jwt, JWT_SECRET_KEY);
+
 
 const id = 1234;
 
@@ -26,8 +28,8 @@ onGeneratedToken(id).subscribe(
   result => {
     onRetrievedData(result).subscribe(
       result => console.log('ID:', result),
-      (msg, error) => console.log(msg, error)
+      (msg, error) => console.log(msg, '>>', error)
     );
   },
-  (msg, error) => console.log(msg, error)
+  (msg, error) => console.log(msg, '>>', error)
 );
